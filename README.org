@@ -1,0 +1,14 @@
+#+TITLE: Advent of Code 2021
+Solutions for Advent of Code
+
+* Run solutions
+
+** Run Specific days
+#+BEGIN_SRC
+cabal run aoc21 -- 01
+#+END_SRC
+
+** Run All Days
+#+BEGIN_SRC
+cabal run aoc21
+#+END_SRC
