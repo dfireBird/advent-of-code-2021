@@ -2,7 +2,7 @@
 
 module Day08 (solve) where
 
-import           Data.List (delete, sort)
+import           Data.List (sort)
 
 type Display = String
 
@@ -23,27 +23,23 @@ parse = map parseSingle . lines
 parseSingle :: String -> ([Display], [Display])
 parseSingle s = (take 10 . words $ s, drop 11 . words $ s)
 
-ifExist :: Eq a => [a] -> [a] -> Bool
-ifExist [] _        = True
-ifExist (c : cs) xs = c `elem` xs && ifExist cs xs
-
-remove :: Eq a => [a] -> [a] -> [a]
-remove [] xs       = xs
-remove (x : xs) ys = remove xs (delete x ys)
+count :: Eq a => a -> [a] -> Integer
+count a = foldr (\x sum -> if x == a then sum + 1 else sum) 0
 
 decode :: [Display] -> SevenSegment
 decode dpy = SevenSegment top mid btm leftTop leftBtm rightTop rightBtm
   where
-    possiblerights = head . filter ((== 2) . length) $ dpy -- 1
-    midOrLeftTop = remove possiblerights . head . filter ((== 4) . length) $ dpy -- 4
-    top = head . remove possiblerights . head . filter ((== 3) . length) $ dpy -- 7
-    midOrBtm = remove (top : possiblerights) . head . filter (ifExist possiblerights) . filter ((== 5) . length) $ dpy -- 3
-    (mid, btm) = (head . filter (`elem` midOrLeftTop) $ midOrBtm, head . remove midOrLeftTop $ midOrBtm)
-    leftTop = head . delete mid $ midOrLeftTop
-    six = head . filter (not . ifExist possiblerights) . filter ((== 6) . length) $ dpy -- 6
-    rightBtm = head . filter (`elem` possiblerights) $ six
-    rightTop = head . delete rightBtm $ possiblerights
-    leftBtm = head . remove (top : leftTop : rightBtm : midOrBtm) $ six
+    allSegments = concat dpy
+    alpha = "abcdefg"
+    four = head . filter ((== 4) . length) $ dpy
+
+    top = head . filter (\x -> (count x allSegments == 8) && (x `notElem` four)) $ alpha
+    leftTop = head . filter (\x -> count x allSegments == 6) $ alpha
+    rightTop = head . filter (\x -> (count x allSegments == 8) && (x `elem` four)) $ alpha
+    mid = head . filter (\x -> (count x allSegments == 7) && (x `elem` four)) $ alpha
+    leftBtm = head . filter (\x -> count x allSegments == 4) $ alpha
+    rightBtm = head . filter (\x -> count x allSegments == 9) $ alpha
+    btm = head . filter (\x -> (count x allSegments == 7) && (x `notElem` four)) $ alpha
 
 digit :: SevenSegment -> Display -> Integer
 digit ss display
