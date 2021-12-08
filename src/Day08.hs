@@ -23,14 +23,6 @@ parse = map parseSingle . lines
 parseSingle :: String -> ([Display], [Display])
 parseSingle s = (take 10 . words $ s, drop 11 . words $ s)
 
-isUnique :: Int -> Bool
-isUnique x
-    | x == 2 = True
-    | x == 3 = True
-    | x == 4 = True
-    | x == 7 = True
-    | otherwise = False
-
 ifExist :: Eq a => [a] -> [a] -> Bool
 ifExist [] _        = True
 ifExist (c : cs) xs = c `elem` xs && ifExist cs xs
@@ -71,9 +63,9 @@ decodeDigits :: SevenSegment -> [Display] -> Integer
 decodeDigits ss = foldl (\num x -> num * 10 + digit ss x) 0
 
 part1 :: String -> String
-part1 s = show . length . concatMap (filter (isUnique . length) . snd) $ segments
+part1 = show . length . concatMap (filter (isUnique . length) . snd) . parse
   where
-    segments = parse s
+    isUnique x = (x == 2) || (x == 3) || (x == 4) || (x == 7)
 
 part2 :: String -> String
 part2 = show . sum . map helper . parse
