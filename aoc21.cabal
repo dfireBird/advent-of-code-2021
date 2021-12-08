@@ -12,7 +12,8 @@ library
         Day04,
         Day05,
         Day06,
-        Day07
+        Day07,
+        Day08
     build-depends:
         base ^>=4.14.3.0,
         containers ^>= 0.6.5.1,
