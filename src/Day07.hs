@@ -10,7 +10,7 @@ part1 s = show $ minimum $ map (helper positions) [0 .. maximum positions]
   where
     positions = parse s
 
-    helper xs n = sum . map (\x -> abs (n - x)) $ xs
+    helper xs n = sum . map (abs . (n -)) $ xs
 
 part2 :: String -> String
 part2 s = show $ minimum $ map (helper positions) [0 .. maximum positions]
